@@ -9,6 +9,8 @@ import android.net.wifi.WifiManager;
 import android.support.v4.app.ActivityCompat;
 
 public class Util {
+    public static final String ROOT_PATH = "/storage/emulated/0";
+
     //获取IP地址
     public static String getLocalIpStr(Context context){
         WifiManager wifiManager=(WifiManager)context.getSystemService(Context.WIFI_SERVICE);

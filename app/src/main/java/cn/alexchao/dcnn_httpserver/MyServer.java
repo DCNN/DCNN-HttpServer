@@ -39,37 +39,42 @@ public class MyServer extends NanoHTTPD {
         return responseFile(session);
     }
 
-    //  '/': return shared file list
+    //  '/': return the home page
     private Response responseRootPage() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<!DOCTYPE html><html><body>");
-        builder.append("<ol>");
-        for(int i = 0 , len = fileList.size(); i < len ; i++) {
-            File file = new File(fileList.get(i).getPath());
-            if(file.exists()) {
-                builder.append("<li> <a href=\"")
-                    .append(file.getPath())
-                    .append("\">")
-                    .append(file.getName())
-                    .append("</a></li>");
-            }
+        // Provide Vue SPA home page
+        try {
+            FileInputStream fis = new FileInputStream(Util.ROOT_PATH + "/dcnn-data/dist/index.html");
+            return Response.newFixedLengthResponse(Status.OK, "text/html", fis, fis.available());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        builder.append("</ol>");
-        builder.append("</body></html>\n");
-
-        return Response.newFixedLengthResponse(String.valueOf(builder));
+        return response404();
     }
 
     //  serve files
-    private Response responseFile(IHTTPSession session){
+    private Response responseFile(IHTTPSession session) {
         try {
-            //  uri：用于标示文件资源的字符串，这里即是文件路径
             String uri = session.getUri();
+
+            // Vue SPA requests for static res
+            if (uri.startsWith("/static/")) {
+                uri = Util.ROOT_PATH + uri.replaceFirst("/static/", "/dcnn-data/dist/static/");
+            }
+
             Log.d("MyServer", "Asking for" + uri);
-            //  文件输入流
+
+            //  load file from sdCard
             FileInputStream fis = new FileInputStream(uri);
-            //  application/octet-stream (old mime)
-            return Response.newFixedLengthResponse(Status.OK, "text/plain", fis, fis.available());
+
+            // find the correct MIME type
+            String mimeType = "text/plain";
+            if (uri.endsWith(".css")) {
+                mimeType = "text/css";
+            } else if (uri.endsWith(".js")) {
+                mimeType = "application/x-javascript";
+            }
+
+            return Response.newFixedLengthResponse(Status.OK, mimeType, fis, fis.available());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import static cn.alexchao.dcnn_httpserver.Util.verifyStoragePermissions;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String ROOT_PATH = "/storage/emulated/0";
+
 
     private MyServer server;
 
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         LinkedList<File> fileList = new LinkedList<>();
-        fileList.add(new File(ROOT_PATH + "/multicnn/netfiles/AlexNet_def.txt"));
+        fileList.add(new File(Util.ROOT_PATH + "/multicnn/netfiles/AlexNet_def.txt"));
         try {
             server = new MyServer(fileList);
         } catch (IOException e) {
