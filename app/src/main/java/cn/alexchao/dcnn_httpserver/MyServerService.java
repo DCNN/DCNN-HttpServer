@@ -1,7 +1,10 @@
 package cn.alexchao.dcnn_httpserver;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -10,11 +13,25 @@ import java.io.IOException;
 
 public class MyServerService extends Service {
     private static final String TAG = "MyServerService";
+    private static final int ID = 110;
     private MyServer mServer;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "The Service is running ...");
+        Notification.Builder builder = new Notification.Builder(this.getApplicationContext());
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+
+        builder.setContentIntent(PendingIntent.getActivity(this, 0, notificationIntent, 0))
+                .setContentTitle("HTTP Server")    // 设置下拉列表里的标题
+                .setSmallIcon(R.mipmap.ic_launcher)    // 设置状态栏内的小图标
+                .setContentText("HTTP Server is running")          // 设置上下文内容
+                .setWhen(System.currentTimeMillis());  // 设置该通知发生的时间
+
+        Notification notification = builder.build(); // 获取构建好的Notification
+        notification.defaults = Notification.DEFAULT_SOUND; //设置为默认的声音
+
+        startForeground(ID, notification);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -45,6 +62,7 @@ public class MyServerService extends Service {
         Log.d(TAG, "Shutdown Service");
         if (mServer != null) {
             mServer.stop();
+            stopForeground(true);
             Log.d(TAG, "Stop Server");
         }
     }
