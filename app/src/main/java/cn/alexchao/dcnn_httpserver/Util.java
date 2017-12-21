@@ -6,16 +6,21 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 
 public class Util {
     public static final String ROOT_PATH = "/storage/emulated/0";
 
-    //获取IP地址
-    public static String getLocalIpStr(Context context){
-        WifiManager wifiManager=(WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo=wifiManager.getConnectionInfo();
-        return  intToIpAddr(wifiInfo.getIpAddress());
+    public static String getRootPath() {
+        return Environment.getExternalStorageDirectory().toString();
+    }
+
+    // Get IP addr
+    public static String getLocalIpStr(Context context) {
+        WifiManager wifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        return intToIpAddr(wifiInfo.getIpAddress());
     }
 
     private static String intToIpAddr(int ip){

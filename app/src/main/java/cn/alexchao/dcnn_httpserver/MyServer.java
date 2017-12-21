@@ -16,15 +16,6 @@ public class MyServer extends NanoHTTPD {
     private final static int PORT = 8080;
     private static  final String REQUEST_ROOT = "/";
 
-    private LinkedList<File> fileList;  // shared file list
-
-    public MyServer(LinkedList<File> fileList) throws IOException {
-        super(PORT);
-        this.fileList = fileList;
-        start();
-        Log.d("MyServer", "My Server is running, sharing " + this.fileList.size() + " files");
-    }
-
     public MyServer() throws IOException {
         super(PORT);
         start();
