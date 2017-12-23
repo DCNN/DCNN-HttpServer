@@ -15,10 +15,17 @@ public class MyServerService extends Service {
     private static final String TAG = "MyServerService";
     private static final int ID = 110;
     private MyServer mServer;
+    private boolean mIsRunning = false;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "The Service is running ...");
+        if (mIsRunning == false) {
+            Log.d(TAG, "Start Service ...");
+            this.mIsRunning = true;
+        } else {
+            Log.d(TAG, "The Service is already running ...");
+            return super.onStartCommand(intent, flags, startId);
+        }
         Notification.Builder builder = new Notification.Builder(this.getApplicationContext());
         Intent notificationIntent = new Intent(this, MainActivity.class);
 
@@ -63,6 +70,7 @@ public class MyServerService extends Service {
         if (mServer != null) {
             mServer.stop();
             stopForeground(true);
+            this.mIsRunning = false;
             Log.d(TAG, "Stop Server");
         }
     }

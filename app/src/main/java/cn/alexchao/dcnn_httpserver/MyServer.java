@@ -7,10 +7,8 @@ import org.nanohttpd.protocols.http.NanoHTTPD;
 import org.nanohttpd.protocols.http.response.Response;
 import org.nanohttpd.protocols.http.response.Status;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.LinkedList;
 
 public class MyServer extends NanoHTTPD {
     private final static int PORT = 8080;
